@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1829800059905653117}
   - component: {fileID: 4486835609265784240}
   - component: {fileID: 6921003860287350010}
+  - component: {fileID: -3684522663583196410}
   m_Layer: 0
   m_Name: Strawberry
   m_TagString: Untagged
@@ -158,6 +159,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collected: {fileID: 2749048380803443881}
   Score: 9
+--- !u!114 &-3684522663583196410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6016783077133869286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library: []
+  m_SpriteLibraryAsset: {fileID: 0}
 --- !u!1001 &1317839267343478775
 PrefabInstance:
   m_ObjectHideFlags: 0
