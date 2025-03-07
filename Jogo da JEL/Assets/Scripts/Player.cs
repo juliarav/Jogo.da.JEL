@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D rig;
     private Animator anim;
+    private bool Attacking;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
         Move();
         Jump();
         Attack();
+        UpdateAttackStatus();
     }
 
     void Move()
@@ -66,7 +68,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-
+    
     void Jump()
     {
         if (Input.GetButtonDown("Jump"))
@@ -96,14 +98,22 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-        if (Input.GetKeyDown(KeyCode.X)) // Se o jogador pressionar o botão de ataque (Fire1)
+        if (Input.GetKeyDown(KeyCode.X)) // Se o jogador pressionar o botão de ataque (Fire1) e não estiver atacando
         {
-            anim.SetBool("Attack", true); // Ativa a animação de ataque
+            anim.SetTrigger("Attack"); // Ativa a animação de ataque
 
             if (attack != null && !attack.isPlaying) // Toca o som do ataque
             {
                 attack.Play();
             }
+        }
+    }
+
+     void UpdateAttackStatus()
+    {
+        if (Attacking && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+        {
+            Attacking = false; // Permite que o jogador ataque novamente
         }
     }
     void OnCollisionEnter2D(Collision2D collision)
