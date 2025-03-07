@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
     public float Speed;
     public float JumpForce;
+    public AudioSource jump;
+     public AudioSource walk;  // Som de andar
 
     public bool isJumping;
     public bool doubleJump;
@@ -16,89 +18,94 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rig = GetComponent<Rigidbody2D> ();
-        anim = GetComponent<Animator> ();
+        rig = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move ();
-        Jump ();
+        Move();
+        Jump();
     }
 
-    void Move () 
+    void Move()
     {
-       Vector3 movement =  new Vector3 (Input.GetAxis("Horizontal"), 0f, 0f);
-       transform.position += movement * Time.deltaTime * Speed;
+        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
+        transform.position += movement * Time.deltaTime * Speed;
 
-       if (Input.GetAxis("Horizontal") > 0f) 
-       {
-        // Olhando para a direita
+        if (Input.GetAxis("Horizontal") > 0f)
+        {
+            // Olhando para a direita
             anim.SetBool("Walk", true);
-            transform.eulerAngles = new Vector3 (0f, 0f, 0f);
-       }
-
-       if (Input.GetAxis("Horizontal") < 0f) 
-       {
-        // Olhando para a esquerda
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+        }
+        
+        if (Input.GetAxis("Horizontal") < 0f)
+        {
+            // Olhando para a esquerda
             anim.SetBool("Walk", true);
-            transform.eulerAngles = new Vector3 (0f, 180f, 0f);
-       }
+            transform.eulerAngles = new Vector3(0f, 180f, 0f);
+        }
 
-       if (Input.GetAxis("Horizontal") == 0f) 
-       {
+        if (Input.GetAxis("Horizontal") == 0f)
+        {
             anim.SetBool("Walk", false);
-       }
-
-       
-    }
-
-    void Jump () 
-    {
-       if (Input.GetButtonDown("Jump")) 
-       { 
-          if (!isJumping) 
-          {
-            rig.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
-            doubleJump = true;
-            anim.SetBool("Jump", true);
-          }
-          else 
-          {
-            if (doubleJump) 
+        }
+        if (!walk.isPlaying) // Se o som de andar não estiver tocando
             {
-                rig.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
-                doubleJump = false;
+                walk.Play(); // Toca o som de andar
             }
-
-          }
-
-       }
     }
 
-    void OnCollisionEnter2D (Collision2D collision)
+
+    void Jump()
     {
-        if (collision.gameObject.layer == 8) 
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (!isJumping)
+            {
+                if (jump != null)
+                    jump.Play();
+
+                rig.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
+                doubleJump = true;
+                anim.SetBool("Jump", true);
+            }
+            else
+            {
+                if (doubleJump)
+                {
+                    if (jump != null)
+                        jump.Play();
+
+                    rig.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
+                    doubleJump = false;
+                }
+            }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 8)
         {
             isJumping = false;
             anim.SetBool("Jump", false);
         }
 
-        if (collision.gameObject.tag == "Spike") 
+        if (collision.gameObject.tag == "Spike")
         {
-           GameController.instance.ShowGameOver ();
-           Destroy (gameObject);
+            GameController.instance.ShowGameOver();
+            Destroy(gameObject);
         }
     }
 
-    void OnCollisionExit2D (Collision2D collision)
+    void OnCollisionExit2D(Collision2D collision)
     {
-         if (collision.gameObject.layer == 8) 
+        if (collision.gameObject.layer == 8)
         {
             isJumping = true;
         }
     }
 }
-
-
