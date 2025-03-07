@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
     public float Speed;
     public float JumpForce;
     public AudioSource jump;
-     public AudioSource walk;  // Som de andar
+    public AudioSource walk;  
+    public AudioSource attack;
 
     public bool isJumping;
     public bool doubleJump;
@@ -27,37 +28,44 @@ public class Player : MonoBehaviour
     {
         Move();
         Jump();
+        Attack();
     }
 
     void Move()
-    {
+      {
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
         transform.position += movement * Time.deltaTime * Speed;
 
-        if (Input.GetAxis("Horizontal") > 0f)
+        if (Input.GetAxis("Horizontal") > 0f) // Movendo para a direita
         {
-            // Olhando para a direita
             anim.SetBool("Walk", true);
             transform.eulerAngles = new Vector3(0f, 0f, 0f);
-        }
-        
-        if (Input.GetAxis("Horizontal") < 0f)
-        {
-            // Olhando para a esquerda
-            anim.SetBool("Walk", true);
-            transform.eulerAngles = new Vector3(0f, 180f, 0f);
-        }
 
-        if (Input.GetAxis("Horizontal") == 0f)
-        {
-            anim.SetBool("Walk", false);
-        }
-        if (!walk.isPlaying) // Se o som de andar não estiver tocando
+            if (!walk.isPlaying) // Verifica se o som de andar não está tocando
             {
                 walk.Play(); // Toca o som de andar
             }
-    }
+        }
+        else if (Input.GetAxis("Horizontal") < 0f) // Movendo para a esquerda
+        {
+            anim.SetBool("Walk", true);
+            transform.eulerAngles = new Vector3(0f, 180f, 0f);
 
+            if (!walk.isPlaying) // Verifica se o som de andar não está tocando
+            {
+                walk.Play(); // Toca o som de andar
+            }
+        }
+        else // Quando o jogador não está se movendo
+        {
+            anim.SetBool("Walk", false);
+
+            if (walk.isPlaying) // Se o som de andar estiver tocando
+            {
+                walk.Stop(); // Para o som de andar
+            }
+        }
+    }
 
     void Jump()
     {
@@ -86,6 +94,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Attack()
+    {
+        if (Input.GetKeyDown(KeyCode.X)) // Se o jogador pressionar o botão de ataque (Fire1)
+        {
+            anim.SetBool("Attack", true); // Ativa a animação de ataque
+
+            if (attack != null && !attack.isPlaying) // Toca o som do ataque
+            {
+                attack.Play();
+            }
+        }
+    }
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == 8)
