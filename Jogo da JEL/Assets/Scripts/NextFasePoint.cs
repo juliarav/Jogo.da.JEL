@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class NextFasePoint : MonoBehaviour
 {
     public string faseName;
+    private AudioSource audioSource;
 
     void OnCollisionEnter2D (Collision2D collision)
     {
@@ -13,6 +14,11 @@ public class NextFasePoint : MonoBehaviour
         {
             SceneManager.LoadScene (faseName);
         }
+        
+        if (audioSource != null && audioSource.clip != null)
+        {
+            audioSource.Play();
+        }
+        
     }
-
 }
